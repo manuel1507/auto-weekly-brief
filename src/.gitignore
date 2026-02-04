@@ -1,0 +1,4 @@
+echo "token.json" >> .gitignore
+echo "*.json" >> .gitignore   # OPTIONAL - only if you truly want to ignore all JSON
+git add .gitignore
+git commit -m "Ignore OAuth tokens"
