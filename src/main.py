@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from reportlab.pdfgen import canvas
-from report.drive_upload_oauth import upload_pdf_to_drive
+from report.drive_upload import upload_pdf_to_drive
 
 def make_test_pdf(path: str):
     c = canvas.Canvas(path)
