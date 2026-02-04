@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from reportlab.pdfgen import canvas
-from report.drive_upload import upload_pdf_to_drive
+from report.drive_upload import upload_to_drive
 
 def make_test_pdf(path: str):
     c = canvas.Canvas(path)
@@ -14,7 +14,7 @@ def main():
     make_test_pdf(out)
 
     folder_id = os.environ["GOOGLE_DRIVE_FOLDER_ID"]
-    link = upload_pdf_to_drive(out, folder_id)
+    link = upload_to_drive(out, folder_id)
 
     print("✅ Uploaded to Google Drive")
     print(link)
