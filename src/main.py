@@ -1,23 +1,24 @@
 import os
 from datetime import datetime
-from report.drive_upload import upload_to_drive
 from reportlab.pdfgen import canvas
+from report.drive_upload_oauth import upload_pdf_to_drive
 
-def create_dummy_pdf(path):
+def make_test_pdf(path: str):
     c = canvas.Canvas(path)
-    c.drawString(100, 750, "Weekly Automotive Brief")
-    c.drawString(100, 730, f"Generated: {datetime.utcnow()}")
+    c.drawString(72, 760, "Auto Weekly Brief - Upload Test")
+    c.drawString(72, 740, f"Generated at (UTC): {datetime.utcnow().isoformat()}Z")
     c.save()
 
-def run():
-    filename = "weekly_brief.pdf"
-    create_dummy_pdf(filename)
+def main():
+    out = "weekly_brief_TEST.pdf"
+    make_test_pdf(out)
 
     folder_id = os.environ["GOOGLE_DRIVE_FOLDER_ID"]
-    link = upload_to_drive(filename, folder_id)
+    link = upload_pdf_to_drive(out, folder_id)
 
-    print("Uploaded to Drive:")
+    print("✅ Uploaded to Google Drive")
     print(link)
 
 if __name__ == "__main__":
-    run()
+    main()
+
