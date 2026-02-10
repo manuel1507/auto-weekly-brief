@@ -14,21 +14,21 @@ class Settings:
 # Start with RSS only (stable). Add your own feeds.
 RSS_FEEDS: List[str] = [
     # Examples (replace with your chosen feeds)
-  "https://www.autonews.com/rss.xml",
-  "https://europe.autonews.com/rss.xml",
-  "https://www.automotiveworld.com/feed/",
-  "https://www.just-auto.com/feed/",
-  "https://www.wardsauto.com/rss.xml",
-  "https://www.automotivelogistics.media/rss",
-  "https://www.automotivemanufacturingsolutions.com/rss",
-  "https://www.supplychainbrain.com/rss/topic/auto",
-  "https://www.eetimes.com/category/automotive/feed/",
-  "https://www.electronicsweekly.com/automotive/feed",
-  "https://semiengineering.com/category/automotive/feed/",
-  "https://www.sae.org/rss",
-  "https://www.press.bmwgroup.com/global/rss",
-  "https://www.volkswagen-newsroom.com/en/rss.xml",
-  "https://www.media.stellantis.com/rss",
+  "https://www.autonews.com/rss.xml"
+  #"https://europe.autonews.com/rss.xml",
+  #"https://www.automotiveworld.com/feed/",
+  #"https://www.just-auto.com/feed/",
+  #"https://www.wardsauto.com/rss.xml",
+  #"https://www.automotivelogistics.media/rss",
+  #"https://www.automotivemanufacturingsolutions.com/rss",
+  #"https://www.supplychainbrain.com/rss/topic/auto",
+  #"https://www.eetimes.com/category/automotive/feed/",
+  #"https://www.electronicsweekly.com/automotive/feed",
+  #"https://semiengineering.com/category/automotive/feed/",
+  #"https://www.sae.org/rss",
+  #"https://www.press.bmwgroup.com/global/rss",
+  #"https://www.volkswagen-newsroom.com/en/rss.xml",
+  #"https://www.media.stellantis.com/rss",
 ]
 
 # Tier-1 lens keywords: used for scoring and section routing
