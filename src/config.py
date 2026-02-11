@@ -16,12 +16,12 @@ RSS_FEEDS: List[str] = [
     # Examples (replace with your chosen feeds)
   #"https://www.autonews.com/rss.xml"
   #"https://europe.autonews.com/rss.xml",
-  #"https://www.quattroruote.it/content/quattroruote/it/listino/feeds/newsRss/feed.xml",
+  "https://www.quattroruote.it/content/quattroruote/it/listino/feeds/newsRss/feed.xml",
   "https://www.automotiveworld.com/feed/",
   #"https://www.alvolante.it/rss.xml",
   "https://www.motor1.com/rss/news/all/",
   #"https://cnevpost.com/feed/",
-  "https://auto.economictimes.indiatimes.com/rss/topstories",
+  #"https://auto.economictimes.indiatimes.com/rss/topstories",
   #"https://www.just-auto.com/feed/",
   #"https://www.autonews.com/arc/outboundfeeds/sitemap-news/",
   #"https://www.ilsole24ore.com/rss/motori--mercato-e-industria.xml",
