@@ -24,7 +24,7 @@ RSS_FEEDS: List[str] = [
   #"https://auto.economictimes.indiatimes.com/rss/topstories",
   #"https://www.just-auto.com/feed/",
   #"https://www.autonews.com/arc/outboundfeeds/sitemap-news/",
-  #"https://www.ilsole24ore.com/rss/motori--mercato-e-industria.xml",
+  "https://www.ilsole24ore.com/rss/motori--mercato-e-industria.xml",
   #"https://www.ilsole24ore.com/rss/motori--auto.xml",
   #"https://www.ilsole24ore.com/rss/motori--mobilita-e-tech.xml",
   #"https://www.wardsauto.com/rss.xml",
