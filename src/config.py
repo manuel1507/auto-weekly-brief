@@ -4,7 +4,7 @@ from typing import List
 @dataclass
 class Settings:
     days_back: int = 7
-    max_items_per_feed: int = 10
+    max_items_per_feed: int = 6
     # Cost-effective defaults; adjust later
     llm_model: str = "gpt-5-mini"
     embed_model: str = "text-embedding-3-small"
