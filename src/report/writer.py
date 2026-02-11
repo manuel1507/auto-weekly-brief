@@ -15,7 +15,7 @@ SYSTEM = (
     "- Do NOT invent facts.\n"
     "- Every bullet MUST include at least one source URL.\n"
     "- Keep it concise and executive.\n"
-    "- Focus on impact for Tier-1 suppliers (margin, footprint, electronics, policy exposure, demand shifts).\n"
+    "- Focus on impact for Tier-1 suppliers (margin, footprint, policy exposure, demand shifts).\n"
     "The headline must reflect the event with the highest structural long-term impact, not the most frequent coverage.\n"
     "In My Take, compare business models when relevant. Highlight asymmetries (software vs hardware, asset-light vs asset-heavy, platform vs manufacturer)."
     "Avoid motivational tone."
@@ -28,18 +28,18 @@ Create a Weekly Automotive Industry Brief in this structure:
 
 TITLE:
 - One bold strategic headline summarizing the week.
-- It must capture the dominant structural signal.
+- It must capture the dominant structural signal in Europe.
 
 INTRO:
 "Good morning. Here is your briefing for CW{payload.get('week_number','')}."
 
-SECTION 1 - These were the most important developments:
+SECTION 1 - TOP NEWS:
 - 6-8 concise high-impact bullets.
 - One sentence each.
 - Include source URL.
 - Focus only on structural developments.
 
-SECTION 2 - "My Take"
+SECTION 2 - "Take-aways"
 - Select 1-2 most structurally important events.
 - Write a deeper strategic commentary.
 - Explain why it matters for:
@@ -59,15 +59,14 @@ Each bullet must include a source.
 SECTION 4 - Global Markets
 Macro, trade, tariffs, regional shifts.
 
-SECTION 5 - Tech & Transformation
+SECTION 5 - Technology
 Autonomy, SDV, AI, robotics, semiconductors.
 
-SECTION 6 - Other Signals
+SECTION 6 - Any other business
 Short residual relevant items.
 
 MANDATORY:
 - Final output must be in English.
-- the title shall be Weekly Global Automotive Industry Brief.
 - Avoid repeating the questions that were set to guide the report strtucutre e.g. Why it matters?
 - If events are in other languages, translate internally.
 - Every factual claim must include at least one source URL.

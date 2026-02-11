@@ -112,7 +112,7 @@ def main():
     render_pdf(
         report_text,
         out_pdf,
-        title="Weekly Global Automotive Industry Brief (Tier-1 Lens)",
+        title="Weekly Global Automotive Industry Brief",
         subtitle=f"Covering the last {st.days_back} days — Generated {week_tag} (UTC)"
     )
 

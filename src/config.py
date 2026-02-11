@@ -45,8 +45,8 @@ KEYWORDS = {
     "oem_demand": ["sales", "deliveries", "pricing", "price cut", "inventory", "mix", "launch"],
     "suppliers": ["supplier", "contract", "award", "tier-1", "tier 1", "tier-2", "tier 2", "quote"],
     "footprint_ops": ["plant", "factory", "capacity", "shutdown", "closure", "expansion", "localization", "nearshoring"],
-    "ev_battery": ["EV", "battery", "cell", "cathode", "anode", "lithium", "LFP", "NMC", "gigafactory", "recycling"],
-    "electronics_sdv": ["ECU", "E/E", "chip", "semiconductor", "ADAS", "software-defined", "SDV", "cybersecurity"],
+    #"ev_battery": ["EV", "battery", "cell", "cathode", "anode", "lithium", "LFP", "NMC", "gigafactory", "recycling"],
+    #"electronics_sdv": ["ECU", "E/E", "chip", "semiconductor", "ADAS", "software-defined", "SDV", "cybersecurity"],
     "policy_trade": ["tariff", "subsidy", "regulation", "emissions", "homologation", "ban", "duty"],
     "quality_recalls": ["recall", "defect", "safety", "campaign", "investigation"],
 }
