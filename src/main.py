@@ -10,6 +10,7 @@ from src.enrich.rank import score_event, classify_event
 from src.report.writer import write_weekly_report
 from src.report.pdf import render_pdf
 from src.report.drive_upload import upload_to_drive
+from src.ingest.clean import clean_text
 
 def main():
     st = Settings()
@@ -45,10 +46,12 @@ def main():
                 continue
 
             docs.append({
-                "title": it.get("title", ""),
+                #"title": it.get("title", ""),
+                "title": clean_text(it.get("title", "")),
                 "url": url,
                 "published_at": it.get("published_at"),
-                "text": text[:9000],  # cap cost
+                #"text": text[:9000],  # cap cost
+                "text": clean_text(text[:9000]),
             })
         except Exception:
             continue

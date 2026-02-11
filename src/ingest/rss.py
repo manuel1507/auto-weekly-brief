@@ -1,5 +1,6 @@
 import feedparser
 from dateutil import parser as dtparser
+from src.ingest.clean import clean_text
 
 def fetch_rss_items(feed_url: str, max_items: int):
     d = feedparser.parse(feed_url)
@@ -14,7 +15,8 @@ def fetch_rss_items(feed_url: str, max_items: int):
 
         items.append({
             "source": feed_url,
-            "title": getattr(e, "title", "").strip(),
+            #"title": getattr(e, "title", "").strip(),
+            "title": clean_text(getattr(e, "title", "").strip()),
             "url": getattr(e, "link", "").strip(),
             "published_at": published.isoformat() if published else None,
         })
