@@ -31,7 +31,7 @@ TITLE:
 - It must capture the dominant structural signal.
 
 INTRO:
-"Good morning. Here is your briefing for KW{payload.get('week_number','')}."
+"Good morning. Here is your briefing for CW{payload.get('week_number','')}."
 
 SECTION 1 - These were the most important developments:
 - 6-8 concise high-impact bullets.
@@ -39,7 +39,7 @@ SECTION 1 - These were the most important developments:
 - Include source URL.
 - Focus only on structural developments.
 
-SECTION 2 - 🔮 My Take
+SECTION 2 - "My Take"
 - Select 1-2 most structurally important events.
 - Write a deeper strategic commentary.
 - Explain why it matters for:
@@ -50,23 +50,26 @@ SECTION 2 - 🔮 My Take
 - Be analytical, not journalistic.
 - Do NOT speculate beyond provided information.
 
-SECTION 3 - 🏢 Company Updates
+SECTION 3 - Company Updates
 Group events by company name.
 Only include companies with meaningful developments.
 Bullet format, concise.
 Each bullet must include a source.
 
-SECTION 4 - 🌍 Global Markets
+SECTION 4 - Global Markets
 Macro, trade, tariffs, regional shifts.
 
-SECTION 5 - 🔬 Tech & Transformation
+SECTION 5 - Tech & Transformation
 Autonomy, SDV, AI, robotics, semiconductors.
 
-SECTION 6 - 📊 Other Signals
+SECTION 6 - Other Signals
 Short residual relevant items.
 
 MANDATORY:
 - Final output must be in English.
+- the title shall be Weekly Global Automotive Industry Brief.
+- Higlight source link in different colour e.g. blue
+- Avoid repeating the questions that were set to guide the report strtucutre e.g. Why it matters?
 - If events are in other languages, translate internally.
 - Every factual claim must include at least one source URL.
 - Avoid repetition.
