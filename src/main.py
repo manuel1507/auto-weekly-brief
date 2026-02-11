@@ -16,8 +16,7 @@ def main():
     st = Settings()
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=st.days_back)
-    week_number = now.isocalendar().week
-    payload["week_number"] = week_number
+   
 
     # 1) ingest RSS
     raw = []
@@ -94,10 +93,13 @@ def main():
     events.sort(key=lambda e: (e["score"], e.get("published_at") or ""), reverse=True)
     events = events[:st.max_events_in_report]
 
+    week_number = now.isocalendar().week
+    
     payload = {
         "generated_at_utc": now.isoformat(),
         "days_back": st.days_back,
         "events": events,
+        "week_number": week_number,   # ← add it here
     }
 
     # 7) LLM write
