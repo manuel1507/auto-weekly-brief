@@ -61,6 +61,22 @@ def _decode_numeric_entities(s: str) -> str:
     s = _NUM_ENTITY_RE.sub(dec, s)
     return s
 
+def _strip_problem_unicode(s: str) -> str:
+    out = []
+    for ch in s:
+        if ch in ("\n", "\t"):
+            out.append(ch)
+            continue
+        cat = unicodedata.category(ch)
+        # Drop control/format/private-use/surrogates/unassigned
+        if cat[0] == "C":   # Cc, Cf, Cs, Co, Cn
+            continue
+        # Drop noncharacters explicitly (often show as ￾ / �)
+        if ord(ch) in (0xFFFE, 0xFFFF):
+            continue
+        out.append(ch)
+    return "".join(out)
+
 def clean_text(s: str) -> str:
     """
     Cleans RSS/HTML text robustly:
@@ -92,4 +108,5 @@ def clean_text(s: str) -> str:
     s = "\n".join(re.sub(r"[ \t]+", " ", line).strip() for line in s.splitlines())
     s = re.sub(r"\n{3,}", "\n\n", s).strip()
 
+    s = _strip_problem_unicode(s)
     return s
