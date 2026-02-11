@@ -68,7 +68,6 @@ Short residual relevant items.
 MANDATORY:
 - Final output must be in English.
 - the title shall be Weekly Global Automotive Industry Brief.
-- Higlight source link in different colour e.g. blue
 - Avoid repeating the questions that were set to guide the report strtucutre e.g. Why it matters?
 - If events are in other languages, translate internally.
 - Every factual claim must include at least one source URL.
