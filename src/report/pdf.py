@@ -30,7 +30,7 @@ def render_pdf(report_text: str, out_path: str, title: str, subtitle: str):
 
             if y < 2 * cm:
                 c.showPage()
-                c.setFont("DejaVuSans", 10)
+                c.setFont("Helvetica", 10)
                 y = height - 2 * cm
 
             # Detect source line
@@ -45,14 +45,14 @@ def render_pdf(report_text: str, out_path: str, title: str, subtitle: str):
                 c.drawString(x, y, text_part)
 
                 # Calculate X offset for URL
-                offset = stringWidth(text_part, "DejaVuSans", 10)
+                offset = stringWidth(text_part, "Helvetica", 10)
 
                 # Draw URL in blue
                 c.setFillColor(colors.blue)
                 c.drawString(x + offset, y, url_part)
 
                 # Underline URL
-                url_width = stringWidth(url_part, "DejaVuSans", 10)
+                url_width = stringWidth(url_part, "Helvetica", 10)
                 c.line(x + offset, y - 1, x + offset + url_width, y - 1)
 
                 # Optional: make it clickable
