@@ -100,6 +100,7 @@ def main():
 
     # 7) LLM write
     report_text = write_weekly_report(st.llm_model, payload)
+    report_text = clean_text(report_text)   # <<< IMPORTANT
 
     # 8) PDF render
     week_tag = now.strftime("%Y-%m-%d")
