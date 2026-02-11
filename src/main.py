@@ -16,6 +16,8 @@ def main():
     st = Settings()
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=st.days_back)
+    week_number = now.isocalendar().week
+    payload["week_number"] = week_number
 
     # 1) ingest RSS
     raw = []

@@ -16,39 +16,67 @@ SYSTEM = (
     "- Every bullet MUST include at least one source URL.\n"
     "- Keep it concise and executive.\n"
     "- Focus on impact for Tier-1 suppliers (margin, footprint, electronics, policy exposure, demand shifts).\n"
+    "The headline must reflect the event with the highest structural long-term impact, not the most frequent coverage.\n"
+    "In My Take, compare business models when relevant. Highlight asymmetries (software vs hardware, asset-light vs asset-heavy, platform vs manufacturer)."
+    "Avoid motivational tone."
+    "Write like a strategy analyst."
 )
 
 def write_weekly_report(model: str, payload: dict) -> str:
-    prompt = (
-        "Write a Weekly Global Automotive Industry Briefing (Tier-1 lens) in English.\n"
-        "Required sections:\n"
-        "1) Executive Summary (Top 10)\n"
-            "For each bullet:\n"
-            "- What changed?\n"
-            "- Why it matters for Tier-1 suppliers\n"
-            "- Risk or Opportunity\n"
-            "- Impact Horizon (Immediate / 3 to 6 months / Structural)\n"
-            "- Source: <url>\n"
+    prompt = f"""
+Create a Weekly Automotive Industry Brief in this structure:
 
+TITLE:
+- One bold strategic headline summarizing the week.
+- It must capture the dominant structural signal.
 
-        "2) OEM & Demand Signals\n"
-        "3) Suppliers (Tier-1/Tier-2)\n"
-        "4) Footprint & Operations\n"
-        "5) EV / Battery / Materials\n"
-        "6) Electronics / SDV / ADAS\n"
-        "7) Policy & Trade\n"
-        "8) Quality & Recalls\n"
-        "9) Watchlist (next 2 to 4 weeks)\n\n"
-        "Formatting:\n"
-        "- Use short bullets.\n"
-        "- Be concise and executive.\n"
-        "- Avoid generic wording.\n"
-        "- Avoid repeating similar events.\n"
-        "- If information is weak or unclear, omit it.\n"   
-        "- For each bullet include: What happened — Why it matters for Tier-1s — Source: <url>\n"
-        "- If evidence is weak or unclear, OMIT the bullet.\n\n"
-        f"Input events JSON:\n{json.dumps(payload, ensure_ascii=False)}"
-    )
+INTRO:
+"Good morning. Here is your briefing for KW{payload.get('week_number','')}."
+
+SECTION 1 - These were the most important developments:
+- 6-8 concise high-impact bullets.
+- One sentence each.
+- Include source URL.
+- Focus only on structural developments.
+
+SECTION 2 - 🔮 My Take
+- Select 1-2 most structurally important events.
+- Write a deeper strategic commentary.
+- Explain why it matters for:
+  • Tier-1 suppliers
+  • Margin structure
+  • Business model shifts
+  • Competitive positioning
+- Be analytical, not journalistic.
+- Do NOT speculate beyond provided information.
+
+SECTION 3 - 🏢 Company Updates
+Group events by company name.
+Only include companies with meaningful developments.
+Bullet format, concise.
+Each bullet must include a source.
+
+SECTION 4 - 🌍 Global Markets
+Macro, trade, tariffs, regional shifts.
+
+SECTION 5 - 🔬 Tech & Transformation
+Autonomy, SDV, AI, robotics, semiconductors.
+
+SECTION 6 - 📊 Other Signals
+Short residual relevant items.
+
+MANDATORY:
+- Final output must be in English.
+- If events are in other languages, translate internally.
+- Every factual claim must include at least one source URL.
+- Avoid repetition.
+- No generic filler language.
+- Prioritize structural shifts over daily noise.
+
+Input events JSON:
+{json.dumps(payload, ensure_ascii=False)}
+"""
+
 
     resp = client.responses.create(
         model=model,
