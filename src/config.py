@@ -4,7 +4,7 @@ from typing import List
 @dataclass
 class Settings:
     days_back: int = 7
-    max_items_per_feed: int = 5
+    max_items_per_feed: int = 10
     # Cost-effective defaults; adjust later
     llm_model: str = "gpt-5-mini"
     embed_model: str = "text-embedding-3-small"
@@ -19,8 +19,8 @@ RSS_FEEDS: List[str] = [
   "https://www.quattroruote.it/content/quattroruote/it/listino/feeds/newsRss/feed.xml",
   "https://www.automotiveworld.com/feed/",
   #"https://www.alvolante.it/rss.xml",
-  "https://www.motor1.com/rss/news/all/",
-  #"https://cnevpost.com/feed/",
+  #"https://www.motor1.com/rss/news/all/",
+  "https://cnevpost.com/feed/",
   #"https://auto.economictimes.indiatimes.com/rss/topstories",
   #"https://www.just-auto.com/feed/",
   #"https://www.autonews.com/arc/outboundfeeds/sitemap-news/",
