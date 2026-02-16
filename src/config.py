@@ -20,7 +20,7 @@ RSS_FEEDS: List[str] = [
   "https://www.automotiveworld.com/feed/",
   #"https://www.alvolante.it/rss.xml",
   #"https://www.motor1.com/rss/news/all/",
-  "https://cnevpost.com/feed/",
+  #"https://cnevpost.com/feed/",
   #"https://auto.economictimes.indiatimes.com/rss/topstories",
   #"https://www.just-auto.com/feed/",
   #"https://www.autonews.com/arc/outboundfeeds/sitemap-news/",
