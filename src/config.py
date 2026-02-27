@@ -50,3 +50,35 @@ KEYWORDS = {
     "policy_trade": ["tariff", "subsidy", "regulation", "emissions", "homologation", "ban", "duty"],
     "quality_recalls": ["recall", "defect", "safety", "campaign", "investigation"],
 }
+
+# Notizie che vogliamo privilegiare per un brief Tier-1 (produzione/footprint/M&A/supply chain)
+CORE_CATEGORIES = {
+    "FOOTPRINT_CAPACITY",
+    "M&A",
+    "RESTRUCTURING",
+    "SUPPLY_CHAIN",
+    "REGULATION_SUPPLY"
+}
+
+# Termini che indicano forte rilevanza industriale (aumenti capacità, chiusure, investimenti, ecc.)
+INDUSTRIAL_SIGNALS = [
+    "plant", "factory", "facility", "site", "greenfield", "brownfield",
+    "capacity", "ramp-up", "ramp up", "shift", "line", "tooling",
+    "shutdown", "closure", "close", "halt", "suspend",
+    "layoff", "layoffs", "job cuts", "redundancies",
+    "capex", "investment", "expansion", "new facility", "production",
+    "bankruptcy", "insolvency", "restructuring", "administration",
+    "acquire", "acquisition", "merger", "m&a", "takeover", "divest", "spin-off", "joint venture", "jv",
+    "supplier", "tier 1", "tier-1", "tier 2", "tier-2", "sourcing", "award", "nomination",
+    "semiconductor", "chip", "pcb", "pcba", "wiring harness", "connector",
+    "battery cell", "cathode", "anode", "lithium", "rare earth"
+]
+
+# Termini tipici di news meno utili per te (vendite / modello / PR)
+DEPRIORITIZE_SIGNALS = [
+    "sales", "registrations", "deliveries", "market share",
+    "new model", "facelift", "refresh", "trim", "variant",
+    "first drive", "test drive", "review",
+    "design", "interior", "infotainment",
+    "appointed", "named", "joins as", "new ceo", "new cto", "board"
+]
