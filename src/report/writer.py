@@ -17,7 +17,7 @@ SYSTEM = (
     "- Keep it concise and executive.\n"
     "- Focus on impact for Tier-1 suppliers (margin, footprint, policy exposure, demand shifts).\n"
     "The headline must reflect the event with the highest structural long-term impact, not the most frequent coverage.\n"
-    "In My Take, compare business models when relevant. Highlight asymmetries (software vs hardware, asset-light vs asset-heavy, platform vs manufacturer)."
+    "In TAKE-AWAYS, compare business models when relevant. Highlight asymmetries (software vs hardware, asset-light vs asset-heavy, platform vs manufacturer)."
     "Avoid motivational tone."
     "Write like a strategy analyst."
 )
@@ -33,13 +33,13 @@ TITLE:
 INTRO:
 "Good morning. Here is your briefing for CW{payload.get('week_number','')}."
 
-SECTION 1 - TOP NEWS:
+TOP NEWS:
 - 6-8 concise high-impact bullets.
 - One sentence each.
 - Include source URL.
 - Focus only on structural developments.
 
-SECTION 2 - "Take-aways"
+TAKE-AWAYS
 - Select 1-2 most structurally important events.
 - Write a deeper strategic commentary.
 - Explain why it matters for:
@@ -49,21 +49,6 @@ SECTION 2 - "Take-aways"
   • Competitive positioning
 - Be analytical, not journalistic.
 - Do NOT speculate beyond provided information.
-
-SECTION 3 - Company Updates
-Group events by company name.
-Only include companies with meaningful developments.
-Bullet format, concise.
-Each bullet must include a source.
-
-SECTION 4 - Global Markets
-Macro, trade, tariffs, regional shifts.
-
-SECTION 5 - Technology
-Autonomy, SDV, AI, robotics, semiconductors.
-
-SECTION 6 - Any other business
-Short residual relevant items.
 
 MANDATORY:
 - Final output must be in English.
