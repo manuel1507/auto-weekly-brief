@@ -1,5 +1,6 @@
 import os
 from datetime import datetime, timedelta, timezone
+from urllib.parse import urlparse
 
 from src.config import Settings, RSS_FEEDS, KEYWORDS
 from src.ingest.rss import fetch_rss_items
@@ -12,11 +13,54 @@ from src.report.pdf import render_pdf
 from src.report.drive_upload import upload_to_drive
 from src.ingest.clean import clean_text
 
+
+def _domain(url: str) -> str:
+    try:
+        return urlparse(url).netloc.lower().replace("www.", "")
+    except Exception:
+        return ""
+
+
+def _pick_canonical(members: list[dict]) -> dict:
+    """
+    Pick a canonical article for an event cluster.
+
+    Previous behavior: always pick the longest article -> tends to bias toward
+    a single publisher with long-form pages (e.g., Automotive World), reducing
+    perceived source diversity.
+
+    New behavior (minimal change):
+    - prefer content-rich candidates (longer text)
+    - but if the cluster contains multiple domains, avoid picking the same domain repeatedly
+      within that cluster (pick the first unseen domain in sorted candidates)
+    """
+    if not members:
+        return {}
+
+    def _pub(m: dict) -> str:
+        # ISO string if present; lexicographic sort works well enough here
+        return m.get("published_at") or ""
+
+    candidates = sorted(
+        members,
+        key=lambda m: (len(m.get("text", "")), _pub(m)),
+        reverse=True,
+    )
+
+    seen_domains = set()
+    for c in candidates:
+        d = _domain(c.get("url", ""))
+        if d and d not in seen_domains:
+            return c
+        seen_domains.add(d)
+
+    return candidates[0]
+
+
 def main():
     st = Settings()
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=st.days_back)
-   
 
     # 1) ingest RSS
     raw = []
@@ -47,12 +91,10 @@ def main():
                 continue
 
             docs.append({
-                #"title": it.get("title", ""),
                 "title": clean_text(it.get("title", "")),
                 "url": url,
                 "published_at": it.get("published_at"),
-                #"text": text[:9000],  # cap cost
-                "text": clean_text(text[:9000]),
+                "text": clean_text(text[:9000]),  # cap cost
             })
         except Exception:
             continue
@@ -71,40 +113,60 @@ def main():
     events = []
     for idxs in clusters_idx:
         members = [docs[i] for i in idxs]
-        canonical = max(members, key=lambda m: len(m["text"]))
+
+        # NEW: canonical selection with less single-source bias
+        canonical = _pick_canonical(members)
+
         event = {
-            "title": canonical["title"],
-            "url": canonical["url"],
-            "published_at": canonical["published_at"],
-            "summary_seed": canonical["text"][:800],  # seed for LLM
-            "members": [{"title": m["title"], "url": m["url"]} for m in members[:6]],
+            "title": canonical.get("title", ""),
+            "url": canonical.get("url", ""),
+            "published_at": canonical.get("published_at"),
+            "summary_seed": (canonical.get("text", "")[:800]),
+            "members": [{"title": m.get("title", ""), "url": m.get("url", "")} for m in members[:6]],
         }
+
         event["category"] = classify_event(
-            {"title": event["title"], "text": canonical["text"]},
+            {"title": event["title"], "text": canonical.get("text", "")},
             KEYWORDS
         )
         event["score"] = score_event(
-            {"title": event["title"], "text": canonical["text"]},
+            {"title": event["title"], "text": canonical.get("text", "")},
             KEYWORDS
         )
         events.append(event)
 
-    # 6) rank + select
+    # 6) rank
     events.sort(key=lambda e: (e["score"], e.get("published_at") or ""), reverse=True)
-    events = events[:st.max_events_in_report]
+
+    # NEW: limit per-domain to improve source diversity in final selection
+    max_per_domain = getattr(st, "max_per_domain", 3)  # add to Settings/config if you want
+    selected = []
+    domain_counts = {}
+
+    for e in events:
+        d = _domain(e.get("url", ""))
+        if d and domain_counts.get(d, 0) >= max_per_domain:
+            continue
+        selected.append(e)
+        if d:
+            domain_counts[d] = domain_counts.get(d, 0) + 1
+        if len(selected) >= st.max_events_in_report:
+            break
+
+    events = selected
 
     week_number = now.isocalendar().week
-    
+
     payload = {
         "generated_at_utc": now.isoformat(),
         "days_back": st.days_back,
         "events": events,
-        "week_number": week_number,   # ← add it here
+        "week_number": week_number,
     }
 
     # 7) LLM write
     report_text = write_weekly_report(st.llm_model, payload)
-    report_text = clean_text(report_text)   # <<< IMPORTANT
+    report_text = clean_text(report_text)
 
     # 8) PDF render
     week_tag = now.strftime("%Y-%m-%d")
@@ -123,6 +185,6 @@ def main():
     print("✅ Uploaded PDF to Google Drive:")
     print(link)
 
+
 if __name__ == "__main__":
     main()
-
