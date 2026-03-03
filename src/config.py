@@ -9,7 +9,7 @@ class Settings:
     llm_model: str = "gpt-5-mini"
     embed_model: str = "text-embedding-3-small"
     dedup_threshold: float = 0.86
-    max_events_in_report: int = 80
+    max_events_in_report: int = 60
 
 # Start with RSS only (stable). Add your own feeds.
 RSS_FEEDS: List[str] = [
