@@ -3,136 +3,104 @@ from openai import OpenAI
 
 client = OpenAI()
 
-SYSTEM = """
-You are a senior automotive supply-base analyst writing a weekly industrial scan for Tier-1/Tier-2 professionals.
+SYSTEM = """You are a senior automotive supply-base analyst writing a weekly brief for Tier-1/Tier-2 professionals.
 
-Hard constraints:
-- Use ONLY the provided events JSON. Do not invent facts, numbers, dates, quotes, or actors not present in the events.
+Hard rules:
+- Use ONLY the provided input JSON (already filtered and allocated). Do not invent facts, numbers, dates, quotes, or actors.
 - Output MUST be in English. Input may be in any language; translate internally without mentioning translation.
-- Style: crisp, analytical, supply-base oriented. Not journalism. Not motivational.
+- Style: industrial memo. Crisp, concrete, supplier-relevant. No hype. No motivational tone.
+- EVERY factual bullet MUST end with 1–2 source URLs taken ONLY from that event's URLs. Never introduce new URLs.
+- Do not repeat the same event in multiple sections (events are pre-allocated; use each at most once).
+- Avoid consumer noise (sales/registrations/insurance/model reviews). The input should already avoid it; do not reintroduce it.
 
-Priority focus (supplier relevance):
-- footprint/capacity (openings/closures, ramp up/down, utilisation)
-- capex & industrialisation timing (validation/tooling)
-- disruptions (strikes, shortages, stoppages)
-- M&A/JVs/divestments, distress/insolvency
-- trade/regulation impacting sourcing, duties, compliance economics
-- manufacturing/automation shifts
-
-Hard exclude unless DIRECT production/capex/sourcing impact is explicitly stated in the event:
-- registrations/market-share stories
-- consumer insurance topics
-- model launches/reviews, infotainment/design
-- generic fleet “PR” deliveries without operational impact
-
-Citation discipline (strict):
-- EVERY bullet must end with 1-2 URLs, and URLs must be taken ONLY from that event.urls.
-- Never introduce new URLs.
-- Never cite a URL that belongs to a different event than the bullet content.
-
-Anti-repetition (enforced via Event IDs):
-- Each event_id may be used AT MOST ONCE across ALL factual bullets in Industrial Developments.
-- Every factual bullet MUST start with its event tag like [E7]. Never reuse an event_id tag.
+Output format must match the template exactly.
 """
 
-def _compact_payload(payload: dict, max_events: int = 60) -> dict:
-    events = (payload.get("events") or [])[:max_events]
-    compact = []
 
-    for idx, e in enumerate(events, start=1):
-        urls = []
-        if e.get("url"):
-            urls.append(e["url"])
-        for m in (e.get("members") or [])[:6]:
-            u = (m or {}).get("url")
-            if u and u not in urls:
-                urls.append(u)
+def _compact_allocated(payload: dict, max_members: int = 4) -> dict:
+    """Reduce payload size and make citation handling easier for the model."""
+    allocated = payload.get("allocated") or {}
+    out = {}
+    for bucket_name, events in allocated.items():
+        compact_events = []
+        for e in events or []:
+            urls = []
+            if e.get("url"):
+                urls.append(e["url"])
+            for m in (e.get("members") or [])[:max_members]:
+                u = (m or {}).get("url")
+                if u and u not in urls:
+                    urls.append(u)
 
-        compact.append({
-            "event_id": idx,
-            "title": e.get("title", ""),
-            "category": e.get("category", ""),
-            "score": e.get("score", ""),
-            "summary_seed": e.get("summary_seed", ""),
-            "urls": urls,
-        })
+            compact_events.append({
+                "title": e.get("title", ""),
+                "published_at": e.get("published_at", ""),
+                "score": e.get("score", ""),
+                "summary_seed": e.get("summary_seed", ""),
+                "urls": urls,
+            })
+        out[bucket_name] = compact_events
 
     return {
         "week_number": payload.get("week_number", ""),
         "days_back": payload.get("days_back", ""),
-        "events": compact,
+        "allocated": out,
     }
 
 
 def write_weekly_report(model: str, payload: dict) -> str:
-    data = _compact_payload(payload, max_events=60)
-    events_json = json.dumps(data, ensure_ascii=False)
+    data = _compact_allocated(payload)
+    week = data.get("week_number", "")
+    data_json = json.dumps(data, ensure_ascii=False)
 
-    user_prompt = f"""
-Write the brief in EXACTLY this structure (plain text). Enforce event uniqueness using event_id tags.
+    prompt = f"""Write the brief in EXACTLY this structure (plain text):
 
-Automotive Supply Base Brief - CW{data.get('week_number','')}
+Automotive Supply Base Brief – CW{week}
 <One-line structural headline>
 
-Good morning. Here is your supply base briefing for CW{data.get('week_number','')}.
+Good morning. Here is your supply base briefing for CW{week}.
 
 Industrial Developments
 
 Footprint & Capacity
-- Exactly 5 bullets
-- Each bullet MUST start with [E#] where # is the event_id
-- Use 5 DIFFERENT event_ids
-- ONE sentence per bullet
-- End with 1-2 URLs from that SAME event.urls
+- Write 4–6 bullets, selecting the highest-score events from this bucket.
+- Each bullet: ONE sentence, factual, supplier-relevant, ends with 1–2 URLs from that event.urls.
 
-Ownership, Financial Stress & Compliance
-- Exactly 4 bullets
-- Use 4 DIFFERENT event_ids NOT used above
-- Each bullet starts with [E#]
-- ONE sentence per bullet
-- End with 1-2 URLs from that SAME event.urls
+Ownership, Compliance & Market Structure
+- Write 3–5 bullets, selecting the highest-score events from this bucket.
+- Same bullet rules.
 
 Trade, Energy & Cost Base
-- Exactly 4 bullets
-- Use 4 DIFFERENT event_ids NOT used above
-- Each bullet starts with [E#]
-- ONE sentence per bullet
-- End with 1-2 URLs from that SAME event.urls
+- Write 3–5 bullets, selecting the highest-score events from this bucket.
+- Same bullet rules.
 
-Technology & Manufacturing
-- Exactly 4 bullets
-- Use 4 DIFFERENT event_ids NOT used above
-- Each bullet starts with [E#]
-- ONE sentence per bullet
-- End with 1-2 URLs from that SAME event.urls
+Technology & Industrialisation Timing
+- Write 3–5 bullets, selecting the highest-score events from this bucket.
+- Same bullet rules.
 
 Industrial Impact
-- ONE compact prose block (6-8 lines).
+- Write ONE compact prose block (6–8 lines).
 - No bullets, no subheaders.
 - Do NOT restate any bullet facts above.
-- Concrete mechanisms only: call-offs, fixed-cost absorption, freight/energy cost volatility, validation/tooling capacity, compliance cost allocation, counterparty risk.
-- OPTIONAL: append 2-3 representative URLs at the end (each must come from events already used above).
+- Synthesize supplier mechanisms: volume variability & call-offs, fixed-cost absorption, energy/freight volatility, capex timing & validation/tooling risk, compliance cost allocation, counterparty complexity.
+- Keep sentences short and concrete. Avoid vague words (signals/structural/reshape/dynamic/ecosystem).
+- Optional: append 2–3 representative URLs at the end (must be from events already used above). Do not add new URLs.
 
-Hard selection rules:
-- Do NOT select registrations/market-share events.
-- Do NOT select consumer insurance events.
-- Do NOT select “model news”.
-- Only include fleet stories if they explicitly change capacity planning, sourcing, or maintenance/call-off schedules.
+Critical constraints:
+- Use ONLY the events provided in each bucket.
+- Do not use the same event twice.
+- Every bullet must end with URLs from that event's urls list.
+- Do not use "Source:" labels; just append URL(s) at the end.
 
-Citation discipline:
-- For each bullet, cite ONLY from that event.urls.
-- Never reuse an event_id across bullets.
-- Never invent URLs.
-
-Input events JSON (authoritative):
-{events_json}
+Input JSON (authoritative):
+{data_json}
 """
 
     resp = client.responses.create(
         model=model,
         input=[
             {"role": "system", "content": SYSTEM},
-            {"role": "user", "content": user_prompt},
+            {"role": "user", "content": prompt},
         ],
     )
     return resp.output_text

@@ -9,11 +9,17 @@ class Settings:
     llm_model: str = "gpt-5-mini"
     embed_model: str = "text-embedding-3-small"
     dedup_threshold: float = 0.86
-    max_events_in_report: int = 60
+
+    # Target output size for the brief (15–20 events total)
+    max_events_in_report: int = 18
+
+    # Limit how many final events can come from the same publisher domain
+    max_per_domain: int = 3
+
 
 # Start with RSS only (stable). Add your own feeds.
 RSS_FEEDS: List[str] = [
-    # Examples (replace with your chosen feeds)
+  # Examples (replace with your chosen feeds)
   #"https://www.autonews.com/rss.xml"
   #"https://europe.autonews.com/rss.xml",
   "https://www.quattroruote.it/content/quattroruote/it/listino/feeds/newsRss/feed.xml",
@@ -34,51 +40,71 @@ RSS_FEEDS: List[str] = [
   #"https://www.eetimes.com/category/automotive/feed/",
   #"https://www.electronicsweekly.com/automotive/feed",
   #"https://semiengineering.com/category/automotive/feed/",
-  #"https://www.sae.org/rss",
-  #"https://www.press.bmwgroup.com/global/rss",
+  "https://www.clepa.eu/feed/",
+  "https://media.mercedes-benz.it/tagfeed/it/tags/corporate,business__news",
+  "https://www.press.bmwgroup.com/global/rss",
   #"https://www.volkswagen-newsroom.com/en/rss.xml",
-  #"https://www.media.stellantis.com/rss",
+  "https://www.stellantis.com/en/news/press-releases.rss.xml",
 ]
 
+
 # Tier-1 lens keywords: used for scoring and section routing
+# NOTE: intentionally de-emphasize sales/model/PR noise.
 KEYWORDS = {
-    "oem_demand": ["sales", "deliveries", "pricing", "price cut", "inventory", "mix", "launch"],
-    "suppliers": ["supplier", "contract", "award", "tier-1", "tier 1", "tier-2", "tier 2", "quote"],
-    "footprint_ops": ["plant", "factory", "capacity", "shutdown", "closure", "expansion", "localization", "nearshoring"],
-    #"ev_battery": ["EV", "battery", "cell", "cathode", "anode", "lithium", "LFP", "NMC", "gigafactory", "recycling"],
-    #"electronics_sdv": ["ECU", "E/E", "chip", "semiconductor", "ADAS", "software-defined", "SDV", "cybersecurity"],
-    "policy_trade": ["tariff", "subsidy", "regulation", "emissions", "homologation", "ban", "duty"],
+    # Keep but low weight in rank.py (or remove entirely if you want)
+    "oem_demand": ["inventory", "mix"],
+
+    # Supplier-relevant
+    "suppliers": ["supplier", "contract", "tier-1", "tier 1", "tier-2", "tier 2", "sourcing", "rfq", "quote"],
+
+    "footprint_ops": [
+        "plant", "factory", "capacity", "utilization", "shutdown", "closure",
+        "expansion", "localization", "nearshoring", "ramp-up", "ramp up", "ramp down",
+        "new facility", "line", "shift", "output", "production"
+    ],
+
+    "policy_trade": ["tariff", "subsidy", "regulation", "emissions", "homologation", "ban", "duty", "compliance"],
+
     "quality_recalls": ["recall", "defect", "safety", "campaign", "investigation"],
 }
 
-# Notizie che vogliamo privilegiare per un brief Tier-1 (produzione/footprint/M&A/supply chain)
-CORE_CATEGORIES = {
-    "FOOTPRINT_CAPACITY",
-    "M&A",
-    "RESTRUCTURING",
-    "SUPPLY_CHAIN",
-    "REGULATION_SUPPLY"
-}
 
-# Termini che indicano forte rilevanza industriale (aumenti capacità, chiusure, investimenti, ecc.)
+# Termini che indicano forte rilevanza industriale (produzione/footprint/M&A/supply chain)
 INDUSTRIAL_SIGNALS = [
+    # footprint/capacity
     "plant", "factory", "facility", "site", "greenfield", "brownfield",
-    "capacity", "ramp-up", "ramp up", "shift", "line", "tooling",
+    "capacity", "utilization", "throughput", "ramp-up", "ramp up", "ramp down",
+    "shift", "line", "tooling",
     "shutdown", "closure", "close", "halt", "suspend",
+    "production", "output", "assembly",
+    "capex", "investment", "expansion", "new facility",
+
+    # restructuring / distress
     "layoff", "layoffs", "job cuts", "redundancies",
-    "capex", "investment", "expansion", "new facility", "production",
     "bankruptcy", "insolvency", "restructuring", "administration",
-    "acquire", "acquisition", "merger", "m&a", "takeover", "divest", "spin-off", "joint venture", "jv",
-    "supplier", "tier 1", "tier-1", "tier 2", "tier-2", "sourcing", "award", "nomination",
+
+    # ownership
+    "acquire", "acquisition", "merger", "m&a", "takeover", "divest", "spin-off",
+    "joint venture", "jv", "stake", "sell", "sale",
+
+    # supply base
+    "supplier", "tier 1", "tier-1", "tier 2", "tier-2", "sourcing", "rfq",
+
+    # electronics / manufacturing
     "semiconductor", "chip", "pcb", "pcba", "wiring harness", "connector",
+
+    # batteries / materials (only when industrialisation/timing is relevant)
     "battery cell", "cathode", "anode", "lithium", "rare earth"
 ]
 
-# Termini tipici di news meno utili per te (vendite / modello / PR)
+
+# Termini tipici di news meno utili (vendite / modello / PR)
 DEPRIORITIZE_SIGNALS = [
     "sales", "registrations", "deliveries", "market share",
     "new model", "facelift", "refresh", "trim", "variant",
     "first drive", "test drive", "review",
     "design", "interior", "infotainment",
-    "appointed", "named", "joins as", "new ceo", "new cto", "board"
+    "appointed", "named", "joins as", "new ceo", "new cto", "board",
+    "award", "nomination",
+    "insurance", "assicurazione", "polizza", "premi",
 ]
