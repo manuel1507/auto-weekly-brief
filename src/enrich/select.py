@@ -82,7 +82,7 @@ def select_and_allocate_events(
     max_per_domain: int = 3,
 ) -> Dict[str, List[dict]]:
     """
-    Select 15–20 supplier-relevant events and allocate them into 4 buckets.
+    Select 15-20 supplier-relevant events and allocate them into 4 buckets.
     This prevents the LLM from pulling in consumer noise or repeating the same story in multiple sections.
     """
     # 1) filter
