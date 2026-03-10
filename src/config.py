@@ -105,11 +105,9 @@ INDUSTRIAL_SIGNALS = [
 
 # Termini tipici di news meno utili (vendite / modello / PR)
 DEPRIORITIZE_SIGNALS = [
-    "sales", "registrations", "deliveries", "market share",
+    "sales", "registrations", "deliveries",
     "new model", "facelift", "refresh", "trim", "variant",
     "first drive", "test drive", "review",
-    "design", "interior", "infotainment",
-    "appointed", "named", "joins as", "new ceo", "new cto", "board",
     "award", "nomination",
     "insurance", "assicurazione", "polizza", "premi",
 ]

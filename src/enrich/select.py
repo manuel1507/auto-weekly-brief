@@ -13,9 +13,9 @@ def _domain(url: str) -> str:
         return ""
 
 
-def _blob(e: dict) -> str:
-    title = (e.get("title") or "")
-    seed = (e.get("summary_seed") or "")
+def _blob(event: Dict) -> str:
+    title = (event.get("title") or "")
+    seed = (event.get("summary_seed") or "")
     return f"{title} {seed}".lower()
 
 
@@ -23,100 +23,73 @@ def _has_any(blob: str, terms: List[str]) -> bool:
     return any(t.lower() in blob for t in terms if t)
 
 
-def _is_supplybase_core(e: dict) -> bool:
-    blob = _blob(e)
-    # Strong signal: industrial keywords
+def _is_deprioritized(event: Dict) -> bool:
+    """
+    Drop consumer / PR / low industrial-value items unless there is a strong
+    industrial signal in the same event.
+    """
+    blob = _blob(event)
+    has_negative = _has_any(blob, DEPRIORITIZE_SIGNALS)
+    has_positive = _has_any(blob, INDUSTRIAL_SIGNALS)
+    return has_negative and not has_positive
+
+
+def _is_supply_base_core(event: Dict) -> bool:
+    """
+    Keep events that clearly matter for Tier-1 / Tier-2 suppliers.
+    """
+    blob = _blob(event)
+
     if _has_any(blob, INDUSTRIAL_SIGNALS):
         return True
-    # Otherwise allow only if already scored high
+
     try:
-        return int(e.get("score") or 0) >= 70
+        score = int(event.get("score") or 0)
     except Exception:
-        return False
+        score = 0
+
+    return score >= 70
 
 
-def _is_deprioritized(e: dict) -> bool:
-    blob = _blob(e)
-    # If it contains deprioritize terms AND does not contain strong industrial signals, drop it
-    if _has_any(blob, DEPRIORITIZE_SIGNALS) and not _has_any(blob, INDUSTRIAL_SIGNALS):
-        return True
-    return False
-
-
-def _bucket(e: dict) -> str:
-    """Deterministic bucket assignment."""
-    blob = _blob(e)
-
-    # Footprint & Capacity
-    if _has_any(blob, [
-        "plant", "factory", "facility", "site", "stabilimento", "impianto", "werk",
-        "capacity", "utilization", "throughput", "ramp", "shift", "line",
-        "shutdown", "closure", "production", "output", "assembly", "capex", "investment", "expansion",
-        "new facility", "greenfield", "brownfield"
-    ]):
-        return "Footprint & Capacity"
-
-    # Ownership / distress / compliance structures
-    if _has_any(blob, [
-        "acquire", "acquisition", "merger", "m&a", "takeover", "divest", "spin-off", "sale",
-        "bankruptcy", "insolvency", "restructuring", "administration", "private equity",
-        "emissions", "co2", "pool", "compliance"
-    ]):
-        return "Ownership, Financial Stress & Compliance"
-
-    # Trade / energy / macro cost base
-    if _has_any(blob, [
-        "tariff", "duty", "trade", "regulation", "subsidy", "ban",
-        "oil", "gas", "energy", "electricity", "inflation", "freight", "shipping", "logistics"
-    ]):
-        return "Trade, Energy & Cost Base"
-
-    # Tech / manufacturing / industrialisation
-    return "Technology & Manufacturing"
-
-
-def select_and_allocate_events(
-    events: List[dict],
+def select_events(
+    events: List[Dict],
     *,
-    max_total: int = 18,
+    max_total: int = 10,
     max_per_domain: int = 3,
-) -> Dict[str, List[dict]]:
+) -> List[Dict]:
     """
-    Select 15-20 supplier-relevant events and allocate them into 4 buckets.
-    This prevents the LLM from pulling in consumer noise or repeating the same story in multiple sections.
+    Deterministic selection of the best supplier-relevant events.
+    No section allocation here: just filter, rank, diversify, and take top N.
     """
-    # 1) filter
-    filtered = []
-    for e in events:
-        if _is_deprioritized(e):
+    # 1) filter out weak / noisy items
+    filtered: List[Dict] = []
+    for event in events:
+        if _is_deprioritized(event):
             continue
-        if _is_supplybase_core(e):
-            filtered.append(e)
+        if _is_supply_base_core(event):
+            filtered.append(event)
 
-    # 2) sort (keep your current scoring as primary key)
-    filtered.sort(key=lambda x: (int(x.get("score") or 0), x.get("published_at") or ""), reverse=True)
+    # 2) sort by score, then by publication date
+    filtered.sort(
+        key=lambda e: (int(e.get("score") or 0), e.get("published_at") or ""),
+        reverse=True,
+    )
 
-    # 3) domain cap + select max_total
-    selected: List[dict] = []
+    # 3) apply domain cap for source diversity
+    selected: List[Dict] = []
     domain_counts: Dict[str, int] = {}
-    for e in filtered:
-        d = _domain(e.get("url", ""))
+
+    for event in filtered:
+        d = _domain(event.get("url", ""))
         if d and domain_counts.get(d, 0) >= max_per_domain:
             continue
-        selected.append(e)
+
+        selected.append(event)
+
         if d:
             domain_counts[d] = domain_counts.get(d, 0) + 1
+
         if len(selected) >= max_total:
             break
 
-    # 4) allocate
-    buckets = {
-        "Footprint & Capacity": [],
-        "Ownership, Financial Stress & Compliance": [],
-        "Trade, Energy & Cost Base": [],
-        "Technology & Manufacturing": [],
-    }
-    for e in selected:
-        buckets[_bucket(e)].append(e)
-
-    return buckets
+    return selected

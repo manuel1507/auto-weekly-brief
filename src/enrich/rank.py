@@ -28,7 +28,7 @@ def score_event(event: Dict, keyword_map: Dict[str, List[str]]) -> int:
         "policy_trade": 16,
         "quality_recalls": 14,
         "electronics_sdv": 12,
-        "ev_battery": 12,
+        "ev_battery": 8,
         "suppliers": 12,
         "oem_demand": 8,
     }

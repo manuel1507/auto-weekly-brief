@@ -9,7 +9,7 @@ from src.ingest.clean import clean_text
 from src.enrich.embed import embed_texts
 from src.enrich.dedup import cluster_by_similarity
 from src.enrich.rank import score_event, classify_event
-from src.enrich.select import select_and_allocate_events
+from src.enrich.select import select_events
 from src.report.writer import write_weekly_report
 from src.report.pdf import render_pdf
 from src.report.drive_upload import upload_to_drive
@@ -24,14 +24,11 @@ def _domain(url: str) -> str:
 
 def _pick_canonical(members: list[dict]) -> dict:
     """
-    Pick a canonical article for an event cluster.
+    Pick a canonical article for a deduplicated event cluster.
 
-    Previous behavior: always pick the longest article -> tends to bias toward
-    a single publisher with long-form pages, reducing perceived source diversity.
-
-    Current behavior:
-    - prefer content-rich candidates (longer text)
-    - if multiple domains exist, pick a strong candidate from a different domain when possible
+    Logic:
+    - Prefer richer articles (longer extracted text)
+    - But avoid always selecting the same domain if the cluster has alternatives
     """
     if not members:
         return {}
@@ -46,10 +43,10 @@ def _pick_canonical(members: list[dict]) -> dict:
     )
 
     seen_domains = set()
-    for c in candidates:
-        d = _domain(c.get("url", ""))
+    for candidate in candidates:
+        d = _domain(candidate.get("url", ""))
         if d and d not in seen_domains:
-            return c
+            return candidate
         seen_domains.add(d)
 
     return candidates[0]
@@ -67,12 +64,12 @@ def main():
 
     # 2) fetch + extract
     docs = []
-    for it in raw:
-        url = it.get("url")
+    for item in raw:
+        url = item.get("url")
         if not url:
             continue
 
-        pub = it.get("published_at")
+        pub = item.get("published_at")
         if pub:
             try:
                 pub_dt = datetime.fromisoformat(pub.replace("Z", "+00:00"))
@@ -88,10 +85,10 @@ def main():
                 continue
 
             docs.append({
-                "title": clean_text(it.get("title", "")),
+                "title": clean_text(item.get("title", "")),
                 "url": url,
-                "published_at": it.get("published_at"),
-                "text": clean_text(text[:9000]),  # cap cost
+                "published_at": item.get("published_at"),
+                "text": clean_text(text[:9000]),
             })
         except Exception:
             continue
@@ -99,11 +96,11 @@ def main():
     if not docs:
         raise RuntimeError("No documents collected. Add RSS feeds in src/config.py")
 
-    # 3) embed for dedup
+    # 3) embeddings for dedup
     embed_inputs = [(d["title"] + "\n" + d["text"][:1500]) for d in docs]
     vectors = embed_texts(embed_inputs, model=st.embed_model)
 
-    # 4) cluster
+    # 4) dedup clustering
     clusters_idx = cluster_by_similarity(docs, vectors, threshold=st.dedup_threshold)
 
     # 5) clusters -> events
@@ -120,25 +117,24 @@ def main():
             "members": [{"title": m.get("title", ""), "url": m.get("url", "")} for m in members[:6]],
         }
 
-        # classify + score (Tier-1 lens)
         event["category"] = classify_event(
             {"title": event["title"], "text": canonical.get("text", "")},
-            KEYWORDS
+            KEYWORDS,
         )
         event["score"] = score_event(
             {"title": event["title"], "text": canonical.get("text", "")},
-            KEYWORDS
+            KEYWORDS,
         )
         events.append(event)
 
-    # 6) rank (highest score first)
+    # 6) rank events globally
     events.sort(key=lambda e: (e["score"], e.get("published_at") or ""), reverse=True)
 
-    # 7) deterministic selection + allocation (prevents filler + repetition in the LLM)
-    allocated = select_and_allocate_events(
+    # 7) select top supplier-relevant events only
+    selected_events = select_events(
         events,
-        max_total=st.max_events_in_report,
-        max_per_domain=st.max_per_domain,
+        max_total=10,
+        max_per_domain=getattr(st, "max_per_domain", 3),
     )
 
     week_number = now.isocalendar().week
@@ -146,21 +142,21 @@ def main():
         "generated_at_utc": now.isoformat(),
         "days_back": st.days_back,
         "week_number": week_number,
-        "allocated": allocated,
+        "events": selected_events,
     }
 
-    # 8) LLM write
+    # 8) write LinkedIn-style brief
     report_text = write_weekly_report(st.llm_model, payload)
     report_text = clean_text(report_text)
 
-    # 9) PDF render
+    # 9) render PDF
     week_tag = now.strftime("%Y-%m-%d")
     out_pdf = f"weekly_auto_brief_{week_tag}.pdf"
     render_pdf(
         report_text,
         out_pdf,
         title="Automotive Supply Base Brief",
-        subtitle=f"Covering the last {st.days_back} days — Generated {week_tag} (UTC)"
+        subtitle=f"Covering the last {st.days_back} days — Generated {week_tag} (UTC)",
     )
 
     # 10) upload to Drive
