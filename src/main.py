@@ -129,6 +129,7 @@ def main():
             KEYWORDS,
         )
         events.append(event)
+        print(event)
 
     # 6) rank events globally
     events.sort(key=lambda e: (e["score"], e.get("published_at") or ""), reverse=True)
