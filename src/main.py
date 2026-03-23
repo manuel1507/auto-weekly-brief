@@ -91,7 +91,8 @@ def main():
                 "text": clean_text(text[:9000]),
             }     
             )
-            print(clean_text(item.get("title", "")))
+            print(clean_text(item.get("title", "")) + url)
+            
         except Exception:
             continue
 
