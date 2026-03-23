@@ -84,14 +84,14 @@ def main():
             if len(text) < 500:
                 continue
             
-            print(clean_text(item.get("title", "")))
-
             docs.append({
                 "title": clean_text(item.get("title", "")),
                 "url": url,
                 "published_at": item.get("published_at"),
                 "text": clean_text(text[:9000]),
-            })
+            }     
+            )
+            print(clean_text(item.get("title", "")))
         except Exception:
             continue
 
