@@ -15,7 +15,7 @@ class Settings:
     max_events_in_report: int = 20
 
     # Limit how many final events can come from the same publisher domain
-    max_per_domain: int = 3
+    max_per_domain: int = 5
 
 
 # Start with RSS only (stable). Add your own feeds.

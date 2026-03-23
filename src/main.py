@@ -83,6 +83,8 @@ def main():
             text = extract_text(html)
             if len(text) < 500:
                 continue
+            
+            print(clean_text(item.get("title", "")))
 
             docs.append({
                 "title": clean_text(item.get("title", "")),
