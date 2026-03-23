@@ -141,7 +141,13 @@ def main():
         max_total=10,
         max_per_domain=getattr(st, "max_per_domain", 3),
     )
-    print(selected_events)
+
+    print("\n===== SELECTED EVENTS =====\n")
+    for i, e in enumerate(selected_events):
+        print(f"{i+1}. {e.get('title','NO TITLE')}")
+
+    print("\n===== END SELECTED =====\n")
+    
 
     week_number = now.isocalendar().week
     payload = {
