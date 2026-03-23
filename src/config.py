@@ -4,18 +4,18 @@ from typing import List
 @dataclass
 class Settings:
     days_back: int = 7
-    max_items_per_feed: int = 4
+    max_items_per_feed: int = 10
     # Cost-effective defaults; adjust later
     #llm_model: str = "gpt-5-mini"
     llm_model: str = "gpt-5.4"
     embed_model: str = "text-embedding-3-large"
-    dedup_threshold: float = 0.83
+    dedup_threshold: float = 0.84
 
     # Target output size for the brief (15–20 events total)
-    max_events_in_report: int = 15
+    max_events_in_report: int = 20
 
     # Limit how many final events can come from the same publisher domain
-    max_per_domain: int = 2
+    max_per_domain: int = 3
 
 
 # Start with RSS only (stable). Add your own feeds.
