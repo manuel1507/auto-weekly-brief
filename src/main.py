@@ -129,10 +129,11 @@ def main():
             KEYWORDS,
         )
         events.append(event)
-        print(event)
+        
 
     # 6) rank events globally
     events.sort(key=lambda e: (e["score"], e.get("published_at") or ""), reverse=True)
+    print(events)
 
     # 7) select top supplier-relevant events only
     selected_events = select_events(
@@ -140,6 +141,7 @@ def main():
         max_total=10,
         max_per_domain=getattr(st, "max_per_domain", 3),
     )
+    print(selected_events)
 
     week_number = now.isocalendar().week
     payload = {
