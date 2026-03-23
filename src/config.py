@@ -12,7 +12,7 @@ class Settings:
     dedup_threshold: float = 0.84
 
     # Target output size for the brief (15–20 events total)
-    max_events_in_report: int = 50
+    max_events_in_report: int = 100
 
     # Limit how many final events can come from the same publisher domain
     max_per_domain: int = 5
@@ -49,8 +49,8 @@ RSS_FEEDS: List[str] = [
   #"https://www.automoto.it/rss/news.xml",
   "https://it.motor1.com/rss/category/attualita/",
   "https://it.motor1.com/rss/category/market/",
-  "https://www.volkswagen-newsroom.com/en/rss.xml",
-  "https://www.stellantis.com/en/news/press-releases.rss.xml",
+  #"https://www.volkswagen-newsroom.com/en/rss.xml",
+  #"https://www.stellantis.com/en/news/press-releases.rss.xml",
 ]
 
 
