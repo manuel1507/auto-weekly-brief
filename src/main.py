@@ -81,7 +81,7 @@ def main():
         try:
             html = fetch_html(url)
             text = extract_text(html)
-            if len(text) < 500:
+            if len(text) < 150:
                 continue
             
             docs.append({

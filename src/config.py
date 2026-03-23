@@ -25,7 +25,7 @@ RSS_FEEDS: List[str] = [
   #"https://europe.autonews.com/rss.xml",
   "https://www.quattroruote.it/content/quattroruote/it/listino/feeds/newsRss/feed.xml",
   "https://www.automotiveworld.com/feed/",
-  #"https://www.alvolante.it/rss.xml",
+  "https://www.alvolante.it/rss.xml",
   "https://www.motor1.com/rss/news/all/",
   #"https://cnevpost.com/feed/",
   #"https://auto.economictimes.indiatimes.com/rss/topstories",
@@ -44,13 +44,13 @@ RSS_FEEDS: List[str] = [
   #"https://feeds.highgearmedia.com/?sites=MotorAuthority&tags=news",
   #"https://www.einnews.com/rss/Ivz9I5o09oVD3CVE",
   #"https://www.clepa.eu/feed/",
-  #"https://media.mercedes-benz.it/tagfeed/it/tags/corporate,business__news",
-  #"https://www.press.bmwgroup.com/global/rss",
+  "https://media.mercedes-benz.it/tagfeed/it/tags/corporate,business__news",
+  "https://www.press.bmwgroup.com/global/rss",
   #"https://www.automoto.it/rss/news.xml",
-  #"https://it.motor1.com/rss/category/attualita/",
-  #"https://it.motor1.com/rss/category/market/",
-  #"https://www.volkswagen-newsroom.com/en/rss.xml",
-  #"https://www.stellantis.com/en/news/press-releases.rss.xml",
+  "https://it.motor1.com/rss/category/attualita/",
+  "https://it.motor1.com/rss/category/market/",
+  "https://www.volkswagen-newsroom.com/en/rss.xml",
+  "https://www.stellantis.com/en/news/press-releases.rss.xml",
 ]
 
 
