@@ -129,12 +129,17 @@ def main():
             KEYWORDS,
         )
         events.append(event)
+    
+    print("\n===== EVENTS =====\n")
+    for i, e in enumerate(events):
+        print(f"{i+1}. {e.get('title','NO TITLE')}")
+
+    print("\n===== END EVENTS =====\n")
         
 
     # 6) rank events globally
     events.sort(key=lambda e: (e["score"], e.get("published_at") or ""), reverse=True)
-    print(events)
-
+    
     # 7) select top supplier-relevant events only
     selected_events = select_events(
         events,
