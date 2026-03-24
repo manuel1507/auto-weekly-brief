@@ -3,7 +3,7 @@ from typing import List
 
 @dataclass
 class Settings:
-    days_back: int = 7
+    days_back: int = 15
     max_items_per_feed: int = 5
     # Cost-effective defaults; adjust later
     #llm_model: str = "gpt-5-mini"

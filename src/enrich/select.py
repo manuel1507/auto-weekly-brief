@@ -215,6 +215,16 @@ def select_events(
         reverse=True,
     )
 
+    print("\n===== SORTED EVENTS =====\n")
+    for i, z in enumerate(filtered):
+        a = z.get("_ai_assessment", {})
+        print(
+            f"{i+1}. {z.get('title','NO TITLE')} "
+            f"| include={a.get('include')} noise={a.get('is_noise')} "
+            f"| prio={a.get('priority')} sup={a.get('supplier_relevance')} mgr={a.get('managerial_relevance')}"
+        )
+    print("\n===== END SORTED =====\n")
+
     # 3) apply domain cap for source diversity
     selected: List[Dict] = []
     domain_counts: Dict[str, int] = {}
@@ -231,6 +241,16 @@ def select_events(
 
         if len(selected) >= max_total:
             break
+    
+    print("\n===== SELECTED EVENTS =====\n")
+    for i, z in enumerate(filtered):
+        a = z.get("_ai_assessment", {})
+        print(
+            f"{i+1}. {z.get('title','NO TITLE')} "
+            f"| include={a.get('include')} noise={a.get('is_noise')} "
+            f"| prio={a.get('priority')} sup={a.get('supplier_relevance')} mgr={a.get('managerial_relevance')}"
+        )
+    print("\n===== END SELECTED =====\n")
 
     # remove internal debug/AI helper field before returning
     for event in selected:
