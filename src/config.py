@@ -45,7 +45,7 @@ RSS_FEEDS: List[str] = [
   #"https://www.einnews.com/rss/Ivz9I5o09oVD3CVE",
   #"https://www.clepa.eu/feed/",
   "https://media.mercedes-benz.it/tagfeed/it/tags/corporate,business__news",
-  "https://www.press.bmwgroup.com/global/rss",
+  #"https://www.press.bmwgroup.com/global/rss",
   #"https://www.automoto.it/rss/news.xml",
   "https://it.motor1.com/rss/category/attualita/",
   "https://it.motor1.com/rss/category/market/",

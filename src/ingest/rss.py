@@ -19,7 +19,12 @@ def fetch_rss_items(feed_url: str, max_items: int):
     items = []
 
     if getattr(d, "bozo", False):
-        print(f"[RSS WARNING] Malformed feed {feed_url}: {getattr(d, 'bozo_exception', 'unknown error')}")
+        bozo_exc = getattr(d, "bozo_exception", None)
+        entries = getattr(d, "entries", []) or []
+
+    # warning solo se il feed è malformato E non ha entry
+    if not entries:
+        print(f"[RSS WARNING] Malformed feed {feed_url}: {bozo_exc}")
 
     entries = getattr(d, "entries", [])
     if not entries:
