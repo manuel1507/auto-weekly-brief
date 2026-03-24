@@ -17,16 +17,21 @@ def fetch_rss_items(feed_url: str, max_items: int):
         return []
 
     items = []
+    entries = getattr(d, "entries", []) or []
 
     if getattr(d, "bozo", False):
         bozo_exc = getattr(d, "bozo_exception", None)
-        entries = getattr(d, "entries", []) or []
+        msg = str(bozo_exc).lower() if bozo_exc else ""
 
-    # warning solo se il feed è malformato E non ha entry
-    if not entries:
-        print(f"[RSS WARNING] Malformed feed {feed_url}: {bozo_exc}")
+        # warning solo se il feed è malformato e non ha entry
+        if not entries:
+            print(f"[RSS WARNING] Malformed feed {feed_url}: {bozo_exc}")
+        # ignora warning innocui di encoding se il feed ha entry
+        elif "document declared as" in msg and "parsed as utf-8" in msg:
+            pass
+        else:
+            print(f"[RSS WARNING] Malformed feed {feed_url}: {bozo_exc}")
 
-    entries = getattr(d, "entries", [])
     if not entries:
         print(f"[RSS WARNING] No entries found in feed {feed_url}")
         return []
