@@ -70,7 +70,7 @@ def select_events(
             filtered.append(event)
 
     print("\n===== FILTERED EVENTS =====\n")
-    for i, z in enumerate(events):
+    for i, z in enumerate(filtered):
         print(f"{i+1}. {z.get('title','NO TITLE')}")
     print("\n===== END FILTERED =====\n")
 
@@ -79,11 +79,6 @@ def select_events(
         key=lambda e: (int(e.get("score") or 0), e.get("published_at") or ""),
         reverse=True,
     )
-
-    print("\n===== SORTED EVENTS =====\n")
-    for i, z in enumerate(events):
-        print(f"{i+1}. {z.get('title','NO TITLE')}")
-    print("\n===== END SORTED =====\n")
 
     # 3) apply domain cap for source diversity
     selected: List[Dict] = []
