@@ -82,7 +82,7 @@ def write_weekly_report(model: str, payload: dict) -> str:
     events_json = json.dumps(data, ensure_ascii=False)
 
     prompt = f"""
-Write the output in EXACTLY this structure (plain text, no markdown tables) and LIMIT to 2999 characters!:
+Write the output in EXACTLY this structure (plain text, no markdown tables) and LIMIT to 2950 characters!:
 
 <short, bold, attention-grabbing hook>
 
@@ -104,7 +104,7 @@ Key signals (this line font bold)
 
 Why it matters (this line font bold)
 
-- Write one short paragraph of 3 to 5 lines.
+- Write one short paragraph of 1 to 2 lines.
 - No bullets in this section.
 - Synthesize the overall meaning of the selected events.
 - Do NOT restate the bullets one by one.
