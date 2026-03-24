@@ -82,9 +82,9 @@ def write_weekly_report(model: str, payload: dict) -> str:
     events_json = json.dumps(data, ensure_ascii=False)
 
     prompt = f"""
-Write the output in EXACTLY this structure (plain text, no markdown tables):
+Write the output in EXACTLY this structure (plain text, no markdown tables) and LIMIT to 2999 characters!:
 
-**<short, bold, attention-grabbing hook>**
+<short, bold, attention-grabbing hook>
 
 Good morning and welcome to this week's update.
 
