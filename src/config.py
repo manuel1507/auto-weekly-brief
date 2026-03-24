@@ -4,12 +4,12 @@ from typing import List
 @dataclass
 class Settings:
     days_back: int = 15
-    max_items_per_feed: int = 5
+    max_items_per_feed: int = 10
     # Cost-effective defaults; adjust later
     #llm_model: str = "gpt-5-mini"
     llm_model: str = "gpt-5.4-mini"
     embed_model: str = "text-embedding-3-large"
-    dedup_threshold: float = 0.84
+    dedup_threshold: float = 0.86
 
     # Target output size for the brief (15–20 events total)
     max_events_in_report: int = 15
