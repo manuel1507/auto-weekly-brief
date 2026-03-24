@@ -84,10 +84,13 @@ def write_weekly_report(model: str, payload: dict) -> str:
     prompt = f"""
 Write the output in EXACTLY this structure (plain text, no markdown tables):
 
-Automotive Supply Base Brief - CW{week}
-<One-line hook suitable for a LinkedIn post>
+**<short, bold, attention-grabbing hook>**
 
-Key supply-base signals
+Good morning and welcome to this week's update.
+
+<One short paragraph saying this is a small AI-based experiment built to summarize the week's most relevant automotive supply-base signals, and that all sources, articles, and editorial rights remain the property of their respective publishers. Keep this note concise, professional, and neutral.>
+
+Key signals (this line font bold)
 
 - Write exactly one bullet for each selected event in the input JSON.
 - Preserve the full set of selected events.
@@ -99,9 +102,9 @@ Key supply-base signals
 - Keep each bullet concise, readable, and copy-paste ready for LinkedIn.
 - Do not create sub-sections.
 
-Why it matters
+Why it matters (this line font bold)
 
-- Write one short paragraph of 3-5 lines.
+- Write one short paragraph of 3 to 5 lines.
 - No bullets in this section.
 - Synthesize the overall meaning of the selected events.
 - Do NOT restate the bullets one by one.
@@ -109,6 +112,8 @@ Why it matters
 - Do not add URLs in this section.
 
 Additional rules:
+- Do not add any title above the hook.
+- Do not write "Automotive Supply Base Brief".
 - Use all selected events from the input JSON.
 - Keep the tone executive and practical.
 - Avoid filler words and generic abstractions.
