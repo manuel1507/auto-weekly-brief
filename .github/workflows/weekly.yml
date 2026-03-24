@@ -2,7 +2,7 @@ name: Weekly Auto Brief
 
 on:
   schedule:
-    - cron: "30 5 * * 1"   # Every Monday 05:30 UTC
+    - cron: "0 16 * * 2"   # Tuesday 17:00 CET / 18:00 CEST
   workflow_dispatch: {}
 
 jobs:
