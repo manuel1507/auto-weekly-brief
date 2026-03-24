@@ -23,6 +23,7 @@ Hard rules:
 - Do not use hashtags.
 - Do not use emojis.
 - Do not mention images, charts, attachments, or PDFs.
+- The entire output must stay under 2750 characters.
 
 Writer role:
 - Selection has already been completed upstream.
@@ -119,6 +120,7 @@ Additional rules:
 - Avoid filler words and generic abstractions.
 - Avoid repetitive wording across bullets.
 - The final output must read like a polished LinkedIn post that can be copied and pasted as-is.
+- If too long → shorten bullets, not content.
 
 Input events JSON (authoritative):
 {events_json}
