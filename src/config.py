@@ -7,7 +7,7 @@ class Settings:
     max_items_per_feed: int = 5
     # Cost-effective defaults; adjust later
     #llm_model: str = "gpt-5-mini"
-    llm_model: str = "gpt-5.4"
+    llm_model: str = "gpt-5.4-mini"
     embed_model: str = "text-embedding-3-large"
     dedup_threshold: float = 0.84
 
