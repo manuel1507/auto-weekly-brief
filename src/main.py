@@ -133,7 +133,6 @@ def main():
     print("\n===== EVENTS =====\n")
     for i, e in enumerate(events):
         print(f"{i+1}. {e.get('title','NO TITLE')}")
-
     print("\n===== END EVENTS =====\n")
         
 
@@ -143,15 +142,14 @@ def main():
     # 7) select top supplier-relevant events only
     selected_events = select_events(
         events,
-        max_total=10,
-        max_per_domain=getattr(st, "max_per_domain", 3),
+        max_total=st.max_events_in_report,
+        max_per_domain=st.max_per_domain,
     )
 
-    print("\n===== SELECTED EVENTS =====\n")
-    for i, e in enumerate(selected_events):
-        print(f"{i+1}. {e.get('title','NO TITLE')}")
-
-    print("\n===== END SELECTED =====\n")
+    #print("\n===== SELECTED EVENTS =====\n")
+    #for i, e in enumerate(selected_events):
+    #    print(f"{i+1}. {e.get('title','NO TITLE')}")
+    #print("\n===== END SELECTED =====\n")
     
 
     week_number = now.isocalendar().week

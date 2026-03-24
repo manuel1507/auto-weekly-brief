@@ -12,7 +12,7 @@ class Settings:
     dedup_threshold: float = 0.84
 
     # Target output size for the brief (15–20 events total)
-    max_events_in_report: int = 100
+    max_events_in_report: int = 15
 
     # Limit how many final events can come from the same publisher domain
     max_per_domain: int = 5
