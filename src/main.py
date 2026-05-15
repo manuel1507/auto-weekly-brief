@@ -13,6 +13,7 @@ from src.enrich.select import select_events
 from src.report.writer import write_weekly_report
 from src.report.pdf import render_pdf
 from src.report.drive_upload import upload_to_drive
+from src.report.email_send import send_pdf_email
 
 
 def _domain(url: str) -> str:
@@ -180,6 +181,9 @@ def main():
 
     print("✅ Uploaded PDF to Google Drive:")
     print(link)
+
+    send_pdf_email(out_pdf, link)
+    print("✅ Sent PDF by email")
 
 
 if __name__ == "__main__":
