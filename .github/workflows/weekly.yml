@@ -35,4 +35,5 @@ jobs:
          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
          MAIL_TO: ${{ secrets.MAIL_TO }}
          MAIL_SUBJECT: ${{ secrets.MAIL_SUBJECT }}
-        run: python -m src.main
+        run: |
+          python -m src.main
