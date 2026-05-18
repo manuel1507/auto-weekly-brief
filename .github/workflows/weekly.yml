@@ -13,7 +13,7 @@ jobs:
       - name: Checkout weekly_brief branch
         uses: actions/checkout@v4
         with:
-          ref: weekly_report
+          ref: weekly_brief
 
       - name: Set up Python
         uses: actions/setup-python@v5
