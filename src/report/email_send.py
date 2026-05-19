@@ -10,12 +10,14 @@ def send_pdf_email(pdf_path: str, drive_link: str):
     msg = EmailMessage()
     msg["Subject"] = os.getenv("MAIL_SUBJECT", "Weekly Automotive Brief")
     msg["From"] = os.environ["SMTP_USER"]
-    msg["To"] = ", ".join(recipients)
+    msg["To"] = os.environ["SMTP_USER"]
+    msg["Bcc"] = ", ".join(recipients)
 
     msg.set_content(
         f"""Buongiorno,
 
 in allegato il Weekly Automotive Brief.
+
 
 
 """
